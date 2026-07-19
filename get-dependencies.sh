@@ -24,7 +24,7 @@ tar xvf /tmp/tarball.tar.zst
 
 mv -v ./sober-binaries-unified/*               ./AppDir/bin
 cp -v ./AppDir/bin/org.vinegarhq.Sober.desktop ./AppDir
-cp -v ./AppDir/sober.svg                       ./AppDir
-cp -v ./AppDir/sober.svg                       ./AppDir/.DirIcon
+cp -v ./AppDir/bin/sober.svg                   ./AppDir
+cp -v ./AppDir/bin/sober.svg                   ./AppDir/.DirIcon
 
 awk -F'=|"' '/release version=/{print $3; exit}' ./AppDir/bin/org.vinegarhq.Sober.metainfo.xml > ~/version
