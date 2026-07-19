@@ -6,7 +6,7 @@ ARCH=$(uname -m)
 
 echo "Installing package dependencies..."
 echo "---------------------------------------------------------------"
-# pacman -Syu --noconfirm PACKAGESHERE
+pacman -Syu --noconfirm webkitgtk-6.0
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
@@ -15,12 +15,11 @@ get-debloated-pkgs --add-common --prefer-nano
 # Comment this out if you need an AUR package
 #make-aur-package PACKAGENAME
 
-# If the application needs to be manually built that has to be done down here
+mkdir -p ./AppDir/bin
+bin=$(wget --retry-connrefused --tries=30 \
+	https://github.com/flathub/org.vinegarhq.Sober/blob/master/org.vinegarhq.Sober.yml  -O - \
+	| sed 's/[()",{} ]/\n/g' | grep -o -m 1 'https://sober.vinegarhq.org.*/sober-binaries-unified.tar.zst')
+wget --retry-connrefused --tries=30 "$bin" -O /tmp/tarball.tar.zst
+tar xvf /tmp/tarball.tar.zst
 
-# if you also have to make nightly releases check for DEVEL_RELEASE = 1
-#
-# if [ "${DEVEL_RELEASE-}" = 1 ]; then
-# 	nightly build steps
-# else
-# 	regular build steps
-# fi
+mv -v ./sober-binaries-unified/* ./AppDir/bin
