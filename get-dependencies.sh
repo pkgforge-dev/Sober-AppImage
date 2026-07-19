@@ -6,7 +6,7 @@ ARCH=$(uname -m)
 
 echo "Installing package dependencies..."
 echo "---------------------------------------------------------------"
-pacman -Syu --noconfirm webkitgtk-6.0
+pacman -Syu --noconfirm webkitgtk-6.0 libadwaita
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
