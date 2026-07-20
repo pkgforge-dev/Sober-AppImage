@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# https://github.com/user-attachments/assets/1548c3b7-5117-4af8-8126-0a780f7eadbe
+
+set -e
+
+_sober_dir=$DATADIR/Sober-AppImage
+_sober_tarball=${TMPDIR:-/tmp}/$$-sober.tar.zst
+
+_get_sober() {
+	_sober_url=$(_fetch \
+		https://github.com/flathub/org.vinegarhq.Sober/blob/master/org.vinegarhq.Sober.yml \
+		| sed 's/[()",{} ]/\n/g' \
+		| grep -o -m 1 'https://sober.vinegarhq.org.*/sober-binaries-unified.tar.zst' || :)
+	mkdir -p "$_sober_dir"
+	_download "$_sober_tarball" "$_sober_url"
+	tar --strip-components=1 -xf "$_sober_tarball" -C "$_sober_dir"
+	rm -f "$_sober_tarball"
+}
+
+if [ ! -f "$_sober_dir"/sober ] && ! _get_sober; then
+	notify -de "Sober download failed!"
+	exit 1
+fi
+
+
+# TODO swap binds to appimage libdir once everything is sorted out
+exec bwrap \
+	--tmpfs / \
+	--dev /dev \
+	--symlink usr/lib /lib \
+	--symlink usr/lib /lib64 \
+	--ro-bind /usr /usr \
+	--bind /home /home \
+	--ro-bind /etc /etc \
+	--bind /run /run \
+	--bind /tmp /tmp \
+	--bind /var /var \
+	--dev-bind /dev/dri /dev/dri \
+	--proc /proc \
+	--ro-bind /sys /sys \
+	--bind "$_sober_dir" /app/bin \
+	--ro-bind "$APPDIR"/bin/flatpak-info /.flatpak-info \
+	--setenv HOME "${HOME:-/home/$LOGNAME}" \
+	--unsetenv APPIMAGE \
+	--unsetenv APPDIR \
+	/app/bin/sober "$@"

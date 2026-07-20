@@ -7,11 +7,18 @@ export ARCH
 export OUTPATH=./dist
 export ADD_HOOKS="self-updater.hook"
 export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
+export ICON=DUMMY
+export DESKTOP=DUMMY
+export MAIN_BIN=sober
 
 # Deploy dependencies
 quick-sharun ./AppDir/bin/*
 
-# Additional changes can be done in between here
+# Remove the proprietary blobs since they cannot be redestributed
+set -- ./sober-binaries-unified/*
+for blob; do
+	find ./AppDir -name "$blob" -delete || :
+done
 
 # Turn AppDir into AppImage
 quick-sharun --make-appimage

@@ -1,0 +1,24 @@
+[Application]
+name=org.vinegarhq.Sober
+runtime=org.gnome.Platform/x86_64/50
+arch=x86_64
+command=sober
+
+[Instance]
+flatpak-version=1.14.8
+app-path=/app
+runtime-path=/usr
+instance-id=1234567890
+
+[Context]
+shared=network;ipc;
+sockets=wayland;fallback-x11;pulseaudio;
+devices=dri;
+features=devel;
+
+[Session Bus Policy]
+ca.desrt.dconf=talk
+org.freedesktop.portal.Documents=talk
+org.freedesktop.portal.FileChooser=talk
+org.freedesktop.portal.Notification=talk
+org.freedesktop.portal.OpenURI=talk
