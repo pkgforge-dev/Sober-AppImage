@@ -25,3 +25,5 @@ tar xvf /tmp/tarball.tar.zst
 cp -rv ./sober-binaries-unified/*              ./AppDir/bin
 
 awk -F'=|"' '/release version=/{print $3; exit}' ./AppDir/bin/org.vinegarhq.Sober.metainfo.xml > ~/version
+
+echo "$bin" > ./AppDir/.sober-link

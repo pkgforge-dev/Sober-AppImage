@@ -8,10 +8,11 @@ _sober_dir=$DATADIR/Sober-AppImage
 _sober_tarball=${TMPDIR:-/tmp}/$$-sober.tar.zst
 
 _get_sober() {
-	_sober_url=$(download \
-		https://github.com/flathub/org.vinegarhq.Sober/blob/master/org.vinegarhq.Sober.yml \
-		| sed 's/[()",{} ]/\n/g' \
-		| grep -o -m 1 'https://sober.vinegarhq.org.*/sober-binaries-unified.tar.zst' || :)
+	if [ -z "$SOBER_DOWNLOAD_LINK" ]; then
+		read -r _sober_url < "$APPDIR"/.sober-link
+	else
+		_sober_url=$SOBER_DOWNLOAD_LINK
+	fi
 	mkdir -p "$_sober_dir"
 	download "$_sober_tarball" "$_sober_url"
 	tar --strip-components=1 -xf "$_sober_tarball" -C "$_sober_dir"
@@ -20,9 +21,9 @@ _get_sober() {
 
 if [ ! -f "$_sober_dir"/sober ] && ! _get_sober; then
 	notify -de "Sober download failed!"
+	>&2 echo "Check updating the AppImage or set SOBER_DOWNLOAD_LINK if $_sober_url no longer works"
 	exit 1
 fi
-
 
 # TODO swap binds to appimage libdir once everything is sorted out
 exec bwrap \
