@@ -12,7 +12,7 @@ export DESKTOP=DUMMY
 export MAIN_BIN=sober
 
 # Deploy dependencies
-quick-sharun ./AppDir/bin/*
+quick-sharun ./AppDir/bin/* /usr/bin/bwrap
 
 # Remove the proprietary blobs since they cannot be redestributed
 set -- ./sober-binaries-unified/*
