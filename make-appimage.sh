@@ -24,7 +24,7 @@ done
 # with what we are doing so bwrap needs to be renamed to bwrap.cmd
 # keep the original bwrap cmd name as well just in case
 cp -v ./AppDir/bin/bwrap        ./AppDir/bin/bwrap.cmd
-cp -v ./AppDir/shared/bin/bwrap ./AppDir/bin/bwrap.cmd
+cp -v ./AppDir/shared/bin/bwrap ./AppDir/shared/bin/bwrap.cmd
 
 # Turn AppDir into AppImage
 quick-sharun --make-appimage
