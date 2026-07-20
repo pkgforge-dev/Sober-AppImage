@@ -26,7 +26,10 @@ if [ ! -f "$_sober_dir"/sober ] && ! _get_sober; then
 fi
 
 # TODO swap binds to appimage libdir once everything is sorted out
-exec bwrap \
+
+# Anylinux-sharun has some logic for when it works as bwrap that conflicts
+# with what we are doing so bwrap was renamed to bwrap.cmd
+exec bwrap.cmd \
 	--tmpfs / \
 	--dev /dev \
 	--symlink usr/lib /lib \
