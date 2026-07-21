@@ -17,12 +17,18 @@ quick-sharun ./AppDir/bin/* /usr/bin/bwrap
 # Remove the proprietary blobs since they cannot be redestributed
 set -- ./sober-binaries-unified/*
 for blob; do
-	find ./AppDir -name "$blob" -delete || :
+	find ./AppDir -name "${blob##*/}" -delete || :
 done
+
+# Anylinux-sharun has some logic for when it works as bwrap that conflicts
+# with what we are doing so bwrap needs to be renamed to bwrap.cmd
+# keep the original bwrap cmd name as well just in case
+cp -v ./AppDir/bin/bwrap        ./AppDir/bin/bwrap.cmd
+cp -v ./AppDir/shared/bin/bwrap ./AppDir/shared/bin/bwrap.cmd
 
 # Turn AppDir into AppImage
 quick-sharun --make-appimage
 
 # Test the app for 12 seconds, if the test fails due to the app
 # having issues running in the CI use --simple-test instead
-quick-sharun --test ./dist/*.AppImage
+quick-sharun --simple-test ./dist/*.AppImage
